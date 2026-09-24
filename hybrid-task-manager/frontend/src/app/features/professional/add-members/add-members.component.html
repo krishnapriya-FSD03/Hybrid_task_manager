@@ -1,0 +1,56 @@
+<div class="header">
+  <a class="back-link" [routerLink]="['/professional/teams', team.id]" *ngIf="team"><mat-icon inline>arrow_back</mat-icon> {{ team.name }}</a>
+  <h1>Add Members</h1>
+</div>
+
+<mat-form-field appearance="outline" class="search-field">
+  <mat-label>Search professional users by name or username</mat-label>
+  <input matInput [(ngModel)]="searchTerm" (ngModelChange)="onSearchChange()" placeholder="e.g. dave or Dave Q" />
+  <mat-icon matSuffix>search</mat-icon>
+</mat-form-field>
+
+@if (loading) {
+  <div class="loading-row"><mat-spinner diameter="28"></mat-spinner></div>
+} @else {
+  <div class="user-list">
+    @for (row of rows; track row.user.id) {
+      <mat-card class="user-row">
+        <div class="avatar">{{ initials(row.user) }}</div>
+        <div class="user-info">
+          <div class="user-name">
+            {{ row.user.first_name }} {{ row.user.last_name }}
+            <span class="username">&#64;{{ row.user.username }}</span>
+          </div>
+          <div class="user-meta">
+            <mat-chip-set>
+              <mat-chip disabled>{{ row.user.account_type }}</mat-chip>
+            </mat-chip-set>
+            @if (row.user.date_joined) {
+              <span class="joined">Joined {{ row.user.date_joined | date: 'MMM y' }}</span>
+            }
+          </div>
+        </div>
+        <div class="actions">
+          @if (row.isMember) {
+            <span class="member-badge"><mat-icon inline>check_circle</mat-icon> Already a member</span>
+          } @else {
+            <mat-form-field appearance="outline" class="role-select">
+              <mat-label>Role</mat-label>
+              <mat-select [(ngModel)]="row.role">
+                <mat-option value="team_member">Team Member</mat-option>
+                <mat-option value="team_lead">Team Lead</mat-option>
+                <mat-option value="manager">Manager</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <button mat-flat-button color="primary" (click)="addToTeam(row)" [disabled]="row.adding">
+              @if (row.adding) { <mat-spinner diameter="18"></mat-spinner> } @else { Add }
+            </button>
+          }
+        </div>
+      </mat-card>
+    }
+    @if (!rows.length) {
+      <p class="empty">No professional users found{{ searchTerm ? ' matching "' + searchTerm + '"' : '' }}.</p>
+    }
+  </div>
+}

@@ -1,0 +1,39 @@
+<h2 mat-dialog-title>Manage Categories</h2>
+<mat-dialog-content>
+  <div class="category-list">
+    @for (c of categories; track c.id) {
+      <div class="category-row">
+        <span class="swatch" [style.background]="c.color"></span>
+        <span class="name">{{ c.name }}</span>
+        <button mat-icon-button (click)="delete(c)" matTooltip="Delete">
+          <mat-icon>delete_outline</mat-icon>
+        </button>
+      </div>
+    }
+    @if (!categories.length) {
+      <p class="empty">No categories yet — add one below.</p>
+    }
+  </div>
+
+  <div class="new-category-form">
+    <mat-form-field appearance="outline" class="name-field">
+      <mat-label>New category name</mat-label>
+      <input matInput [(ngModel)]="newName" (keyup.enter)="create()" />
+    </mat-form-field>
+    <div class="swatch-picker">
+      @for (color of swatches; track color) {
+        <button
+          type="button"
+          class="swatch-btn"
+          [class.selected]="newColor === color"
+          [style.background]="color"
+          (click)="newColor = color"
+        ></button>
+      }
+    </div>
+    <button mat-flat-button color="primary" (click)="create()" [disabled]="!newName.trim()">Add category</button>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="close()">Close</button>
+</mat-dialog-actions>

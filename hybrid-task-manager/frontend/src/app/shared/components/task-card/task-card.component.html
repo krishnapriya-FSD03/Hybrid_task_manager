@@ -1,0 +1,25 @@
+<mat-card class="task-card" (click)="open.emit(task)">
+  <div class="priority-bar" [style.background]="priorityColor"></div>
+  <div class="task-card-body">
+    <div class="task-title">{{ task.title }}</div>
+    @if (task.category) {
+      <span class="category-chip" [style.background]="task.category.color">{{ task.category.name }}</span>
+    }
+    <div class="task-meta">
+      @if (task.due_date) {
+        <span class="meta-item"><mat-icon inline>event</mat-icon> {{ task.due_date | date: 'MMM d' }}</span>
+      }
+      @if (task.comment_count) {
+        <span class="meta-item"><mat-icon inline>chat_bubble_outline</mat-icon> {{ task.comment_count }}</span>
+      }
+      @if (task.recurrence_frequency && task.recurrence_frequency !== 'none') {
+        <span class="meta-item"><mat-icon inline>repeat</mat-icon></span>
+      }
+    </div>
+    @if (task.assignee) {
+      <div class="assignee">
+        <mat-icon inline>account_circle</mat-icon> {{ task.assignee.username }}
+      </div>
+    }
+  </div>
+</mat-card>

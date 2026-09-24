@@ -1,0 +1,23 @@
+<div class="auth-page">
+  <mat-card class="auth-card">
+    <h1>Hybrid Task Manager</h1>
+    <p class="subtitle">Sign in to continue</p>
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Username</mat-label>
+        <input matInput formControlName="username" autocomplete="username" />
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Password</mat-label>
+        <input matInput type="password" formControlName="password" autocomplete="current-password" />
+      </mat-form-field>
+      @if (error) {
+        <p class="error">{{ error }}</p>
+      }
+      <button mat-flat-button color="primary" class="full-width" type="submit" [disabled]="form.invalid || loading">
+        @if (loading) { <mat-spinner diameter="20"></mat-spinner> } @else { Sign in }
+      </button>
+    </form>
+    <p class="switch">No account? <a routerLink="/register">Create one</a></p>
+  </mat-card>
+</div>

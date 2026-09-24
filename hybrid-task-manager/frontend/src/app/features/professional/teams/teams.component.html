@@ -1,0 +1,21 @@
+<div class="board-header">
+  <h1>Teams</h1>
+  <button mat-flat-button color="primary" (click)="openNewTeam()">
+    <mat-icon>add</mat-icon> New team
+  </button>
+</div>
+<div class="team-grid">
+  @for (team of teams; track team.id) {
+    <mat-card class="team-card" [routerLink]="['/professional/teams', team.id]">
+      <div class="team-name">{{ team.name }}</div>
+      <div class="team-desc">{{ team.description || 'No description' }}</div>
+      <div class="team-meta">
+        <span>{{ team.memberships.length }} member{{ team.memberships.length === 1 ? '' : 's' }}</span>
+        <span class="role-badge">{{ team.my_role }}</span>
+      </div>
+    </mat-card>
+  }
+  @if (!teams.length) {
+    <p class="empty">No teams yet — create one to start collaborating.</p>
+  }
+</div>

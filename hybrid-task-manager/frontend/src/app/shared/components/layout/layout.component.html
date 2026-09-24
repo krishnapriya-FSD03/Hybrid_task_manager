@@ -1,0 +1,42 @@
+<mat-toolbar color="primary" class="topbar">
+  <button mat-icon-button (click)="sidenav.toggle()"><mat-icon>menu</mat-icon></button>
+  <span class="brand">Hybrid Task Manager</span>
+  <span class="spacer"></span>
+  <app-notification-bell></app-notification-bell>
+  <button mat-icon-button [matMenuTriggerFor]="userMenu">
+    <mat-icon>account_circle</mat-icon>
+  </button>
+  <mat-menu #userMenu="matMenu">
+    <div class="user-info">Signed in as <strong>{{ auth.currentUser()?.username }}</strong></div>
+    <button mat-menu-item routerLink="/profile">
+      <mat-icon>person</mat-icon> Edit profile
+    </button>
+    <button mat-menu-item (click)="auth.logout()">
+      <mat-icon>logout</mat-icon> Sign out
+    </button>
+  </mat-menu>
+</mat-toolbar>
+
+<mat-sidenav-container class="shell">
+  <mat-sidenav #sidenav mode="side" opened class="sidenav">
+    <mat-nav-list>
+      <a mat-list-item routerLink="/personal" routerLinkActive="active">
+        <mat-icon matListItemIcon>checklist</mat-icon>
+        <span matListItemTitle>Personal Tasks</span>
+      </a>
+      @if (auth.isProfessional()) {
+        <a mat-list-item routerLink="/professional/teams" routerLinkActive="active">
+          <mat-icon matListItemIcon>groups</mat-icon>
+          <span matListItemTitle>Teams</span>
+        </a>
+      }
+      <a mat-list-item routerLink="/dashboard" routerLinkActive="active">
+        <mat-icon matListItemIcon>bar_chart</mat-icon>
+        <span matListItemTitle>Dashboard</span>
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content class="content">
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>

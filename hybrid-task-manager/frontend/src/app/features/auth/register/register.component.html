@@ -1,0 +1,49 @@
+<div class="auth-page">
+  <mat-card class="auth-card">
+    <h1>Create your account</h1>
+    <p class="subtitle">Personal task management, or full team collaboration.</p>
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <mat-radio-group formControlName="account_type" class="account-type">
+        <mat-radio-button value="personal">Personal</mat-radio-button>
+        <mat-radio-button value="professional">Professional</mat-radio-button>
+      </mat-radio-group>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Username</mat-label>
+        <input matInput formControlName="username" />
+        @if (form.get('account_type')?.value === 'professional') {
+          <mat-hint>This is how teammates will find you.</mat-hint>
+        }
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" formControlName="email" />
+      </mat-form-field>
+      <div class="name-row">
+        <mat-form-field appearance="outline">
+          <mat-label>First name</mat-label>
+          <input matInput formControlName="first_name" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Last name</mat-label>
+          <input matInput formControlName="last_name" />
+        </mat-form-field>
+      </div>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Password</mat-label>
+        <input matInput type="password" formControlName="password" />
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Confirm password</mat-label>
+        <input matInput type="password" formControlName="password_confirm" />
+      </mat-form-field>
+
+      @if (error) { <p class="error">{{ error }}</p> }
+
+      <button mat-flat-button color="primary" class="full-width" type="submit" [disabled]="form.invalid || loading">
+        Create account
+      </button>
+    </form>
+    <p class="switch">Already have an account? <a routerLink="/login">Sign in</a></p>
+  </mat-card>
+</div>

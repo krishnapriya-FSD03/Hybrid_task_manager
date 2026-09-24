@@ -1,0 +1,46 @@
+h1 {
+  font-size: 22px;
+  margin: 0 0 16px;
+}
+.profile-card {
+  max-width: 480px;
+  padding: 24px;
+}
+.readonly-row {
+  display: flex;
+  gap: 32px;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #eee;
+}
+.readonly-row div {
+  display: flex;
+  flex-direction: column;
+}
+.label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: rgba(0, 0, 0, 0.5);
+}
+.value {
+  font-size: 14px;
+  margin-top: 2px;
+}
+.account-type {
+  text-transform: capitalize;
+}
+.row {
+  display: flex;
+  gap: 12px;
+}
+.row mat-form-field {
+  flex: 1;
+}
+.full-width {
+  width: 100%;
+}
+.toggle-row {
+  margin: 8px 0 20px;
+  font-size: 13px;
+}

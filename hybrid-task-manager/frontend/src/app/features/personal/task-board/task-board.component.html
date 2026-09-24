@@ -1,0 +1,35 @@
+<div class="board-header">
+  <h1>Personal Tasks</h1>
+  <div class="header-actions">
+    <button mat-stroked-button (click)="openManageCategories()">
+      <mat-icon>label</mat-icon> Categories
+    </button>
+    <button mat-flat-button color="primary" (click)="openNewTask()">
+      <mat-icon>add</mat-icon> New task
+    </button>
+  </div>
+</div>
+
+<div class="board">
+  @for (col of columns; track col.key) {
+    <div class="column">
+      <div class="column-header">{{ col.label }}
+        <span class="count">{{ grouped[col.key].length }}</span>
+      </div>
+      <div
+        cdkDropList
+        [id]="col.key"
+        [cdkDropListData]="grouped[col.key]"
+        [cdkDropListConnectedTo]="columnIds"
+        (cdkDropListDropped)="onDrop($event)"
+        class="column-body"
+      >
+        @for (task of grouped[col.key]; track task.id) {
+          <div cdkDrag [cdkDragData]="task">
+            <app-task-card [task]="task" (open)="openTask(task)"></app-task-card>
+          </div>
+        }
+      </div>
+    </div>
+  }
+</div>

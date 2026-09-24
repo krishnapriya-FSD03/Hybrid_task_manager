@@ -1,0 +1,9 @@
+.task-card { display: flex; overflow: hidden; margin-bottom: 10px; cursor: pointer; transition: box-shadow .15s; }
+.task-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,.15); }
+.priority-bar { width: 4px; flex-shrink: 0; }
+.task-card-body { padding: 10px 14px; flex: 1; }
+.task-title { font-size: 14px; font-weight: 500; margin-bottom: 6px; }
+.category-chip { display: inline-block; font-size: 11px; color: white; padding: 1px 8px; border-radius: 10px; margin-bottom: 6px; }
+.task-meta { display: flex; gap: 12px; font-size: 12px; color: rgba(0,0,0,.6); }
+.meta-item { display: inline-flex; align-items: center; gap: 2px; }
+.assignee { margin-top: 6px; font-size: 12px; color: rgba(0,0,0,.6); display: flex; align-items: center; gap: 4px; }

@@ -1,0 +1,80 @@
+<div class="board-header">
+  <h1>Dashboard</h1>
+  @if (auth.isProfessional()) {
+    <mat-button-toggle-group [(ngModel)]="mode" (change)="load()">
+      <mat-button-toggle value="personal">Personal</mat-button-toggle>
+      <mat-button-toggle value="professional">Professional</mat-button-toggle>
+    </mat-button-toggle-group>
+  }
+  @if (mode === 'professional' && teams.length) {
+    <mat-form-field appearance="outline" class="team-select">
+      <mat-label>Team</mat-label>
+      <mat-select [(ngModel)]="selectedTeam" (selectionChange)="load()">
+        <mat-option [value]="undefined">All teams</mat-option>
+        @for (t of teams; track t.id) {
+          <mat-option [value]="t.id">{{ t.name }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  }
+</div>
+
+@if (stats) {
+  <div class="stat-grid">
+    <mat-card class="stat-card"><div class="stat-value">{{ stats.total }}</div><div class="stat-label">Total tasks</div></mat-card>
+    <mat-card class="stat-card"><div class="stat-value">{{ stats.completed }}</div><div class="stat-label">Completed</div></mat-card>
+    <mat-card class="stat-card warn"><div class="stat-value">{{ stats.overdue }}</div><div class="stat-label">Overdue</div></mat-card>
+    <mat-card class="stat-card"><div class="stat-value">{{ stats.upcoming_7_days }}</div><div class="stat-label">Due this week</div></mat-card>
+  </div>
+
+  <div class="chart-row">
+    <mat-card class="chart-card">
+      <h3>By status</h3>
+      @for (s of statusEntries; track s.key) {
+        <div class="bar-row">
+          <span class="bar-label">{{ statusLabel(s.key) }}</span>
+          <div class="bar-track"><div class="bar-fill" [style.width.%]="barWidth(s.value)"></div></div>
+          <span class="bar-value">{{ s.value }}</span>
+        </div>
+      }
+    </mat-card>
+    <mat-card class="chart-card">
+      <h3>By priority</h3>
+      @for (p of priorityEntries; track p.key) {
+        <div class="bar-row">
+          <span class="bar-label">{{ p.key }}</span>
+          <div class="bar-track"><div class="bar-fill" [style.width.%]="barWidth(p.value)" [style.background]="priorityColor(p.key)"></div></div>
+          <span class="bar-value">{{ p.value }}</span>
+        </div>
+      }
+    </mat-card>
+  </div>
+
+  @if (stats.by_assignee?.length) {
+    <mat-card class="chart-card">
+      <h3>Tasks by assignee</h3>
+      @for (a of stats.by_assignee; track a.assignee__username) {
+        <div class="bar-row">
+          <span class="bar-label">{{ a.assignee__username }}</span>
+          <div class="bar-track"><div class="bar-fill" [style.width.%]="barWidth(a.count)"></div></div>
+          <span class="bar-value">{{ a.count }}</span>
+        </div>
+      }
+    </mat-card>
+  }
+
+  @if (stats.calendar.length) {
+    <mat-card class="chart-card">
+      <h3>Upcoming</h3>
+      <div class="calendar-list">
+        @for (c of stats.calendar.slice(0, 10); track c.id) {
+          <div class="calendar-row">
+            <span class="cal-title">{{ c.title }}</span>
+            <span class="cal-date">{{ c.due_date | date: 'MMM d, y' }}</span>
+            <span class="cal-status">{{ statusLabel(c.status) }}</span>
+          </div>
+        }
+      </div>
+    </mat-card>
+  }
+}

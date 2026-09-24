@@ -1,0 +1,48 @@
+.category-list {
+  min-width: 320px;
+  margin-bottom: 16px;
+}
+.category-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+.swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.name {
+  flex: 1;
+  font-size: 14px;
+}
+.empty {
+  color: rgba(0, 0, 0, 0.5);
+  font-size: 13px;
+}
+.new-category-form {
+  padding-top: 8px;
+  border-top: 1px solid #eee;
+}
+.name-field {
+  width: 100%;
+}
+.swatch-picker {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.swatch-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  padding: 0;
+}
+.swatch-btn.selected {
+  border-color: #333;
+}

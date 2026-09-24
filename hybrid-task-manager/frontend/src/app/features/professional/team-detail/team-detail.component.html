@@ -1,0 +1,116 @@
+@if (team) {
+  <div class="header">
+    @if (!editingDetails) {
+      <h1>{{ team.name }}</h1>
+      <span class="role-badge">You: {{ team.my_role }}</span>
+      @if (team.my_role === 'manager' || team.my_role === 'team_lead') {
+        <button mat-icon-button (click)="startEditingDetails()" matTooltip="Edit team">
+          <mat-icon>edit</mat-icon>
+        </button>
+      }
+      @if (team.my_role === 'manager') {
+        <button mat-icon-button color="warn" (click)="deleteTeam()" matTooltip="Delete team">
+          <mat-icon>delete</mat-icon>
+        </button>
+      }
+    }
+  </div>
+
+  @if (!editingDetails) {
+    <p class="desc">{{ team.description }}</p>
+  } @else {
+    <div class="edit-details-form">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Team name</mat-label>
+        <input matInput [(ngModel)]="editName" />
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Description</mat-label>
+        <textarea matInput rows="2" [(ngModel)]="editDescription"></textarea>
+      </mat-form-field>
+      <div class="edit-actions">
+        <button mat-button (click)="cancelEditingDetails()">Cancel</button>
+        <button mat-flat-button color="primary" (click)="saveDetails()" [disabled]="!editName.trim()">Save</button>
+      </div>
+    </div>
+  }
+
+  <div class="section">
+    <h2>Boards</h2>
+    <div class="board-grid">
+      @for (b of boards; track b.id) {
+        <div class="board-chip-wrap">
+          <a class="board-chip" [routerLink]="['/professional/boards', b.id]">
+            <mat-icon inline>dashboard</mat-icon> {{ b.name }}
+          </a>
+          @if (team.my_role === 'manager' || team.my_role === 'team_lead') {
+            <button mat-icon-button class="board-delete" (click)="deleteBoard(b)" matTooltip="Delete board">
+              <mat-icon inline>close</mat-icon>
+            </button>
+          }
+        </div>
+      }
+    </div>
+    <div class="new-board-form">
+      <mat-form-field appearance="outline">
+        <mat-label>New board name</mat-label>
+        <input matInput [(ngModel)]="newBoardName" (keyup.enter)="createBoard()" />
+      </mat-form-field>
+      <button mat-flat-button color="primary" (click)="createBoard()" [disabled]="!newBoardName.trim()">Add board</button>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <h2>Members</h2>
+      @if (team.my_role === 'manager' || team.my_role === 'team_lead') {
+        <a mat-stroked-button color="primary" [routerLink]="['/professional/teams', team.id, 'add-members']">
+          <mat-icon>person_add</mat-icon> Browse &amp; add members
+        </a>
+      }
+    </div>
+    <mat-list>
+      @for (m of team.memberships; track m.id) {
+        <mat-list-item>
+          <span matListItemTitle>{{ m.user.username }}</span>
+          <span matListItemLine>
+            @if (team.my_role === 'manager' && m.role !== 'manager') {
+              <mat-form-field appearance="outline" class="role-select">
+                <mat-select [ngModel]="m.role" (selectionChange)="changeMemberRole(m.user.username, $event.value)">
+                  <mat-option value="team_member">Team Member</mat-option>
+                  <mat-option value="team_lead">Team Lead</mat-option>
+                  <mat-option value="manager">Manager</mat-option>
+                </mat-select>
+              </mat-form-field>
+            } @else {
+              <span class="role-tag">{{ m.role }}</span>
+            }
+          </span>
+          @if (team.my_role === 'manager' && m.role !== 'manager') {
+            <button mat-icon-button (click)="removeMember(m.user.username)" matTooltip="Remove">
+              <mat-icon>close</mat-icon>
+            </button>
+          }
+        </mat-list-item>
+      }
+    </mat-list>
+    @if (team.my_role === 'manager' || team.my_role === 'team_lead') {
+      <div class="add-member-form">
+        <mat-form-field appearance="outline">
+          <mat-label>Username</mat-label>
+          <input matInput [(ngModel)]="newMemberUsername" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Role</mat-label>
+          <mat-select [(ngModel)]="newMemberRole">
+            <mat-option value="team_member">Team Member</mat-option>
+            <mat-option value="team_lead">Team Lead</mat-option>
+            <mat-option value="manager">Manager</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <button mat-flat-button color="primary" (click)="addMember()" [disabled]="!newMemberUsername.trim()">Add</button>
+      </div>
+      @if (memberError) { <p class="error">{{ memberError }}</p> }
+    }
+  </div>
+}

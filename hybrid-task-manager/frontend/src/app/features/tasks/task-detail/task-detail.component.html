@@ -1,0 +1,110 @@
+<h2 mat-dialog-title>
+  <input class="title-input" [(ngModel)]="task.title" (blur)="saveField('title', task.title)" />
+</h2>
+<mat-dialog-content>
+  <div class="row">
+    <mat-form-field appearance="outline">
+      <mat-label>Status</mat-label>
+      <mat-select [(ngModel)]="task.status" (selectionChange)="saveField('status', task.status)">
+        <mat-option value="todo">To Do</mat-option>
+        <mat-option value="in_progress">In Progress</mat-option>
+        <mat-option value="in_review">In Review</mat-option>
+        <mat-option value="done">Done</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Priority</mat-label>
+      <mat-select [(ngModel)]="task.priority" (selectionChange)="saveField('priority', task.priority)">
+        <mat-option value="low">Low</mat-option>
+        <mat-option value="medium">Medium</mat-option>
+        <mat-option value="high">High</mat-option>
+        <mat-option value="urgent">Urgent</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div class="row">
+    <mat-form-field appearance="outline">
+      <mat-label>Due date</mat-label>
+      <input matInput [matDatepicker]="picker" [ngModel]="task.due_date"
+             (dateChange)="saveField('due_date', $event.value)" />
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Recurrence</mat-label>
+      <mat-select [(ngModel)]="task.recurrence_frequency" (selectionChange)="saveField('recurrence_frequency', task.recurrence_frequency)">
+        <mat-option value="none">None</mat-option>
+        <mat-option value="daily">Daily</mat-option>
+        <mat-option value="weekly">Weekly</mat-option>
+        <mat-option value="monthly">Monthly</mat-option>
+        <mat-option value="yearly">Yearly</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  @if (data.isTeamContext) {
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Assignee (username)</mat-label>
+      <input matInput [ngModel]="task.assignee?.username" #assigneeInput
+             (blur)="saveField('assignee_username', assigneeInput.value)" />
+    </mat-form-field>
+  }
+
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Description</mat-label>
+    <textarea matInput rows="3" [(ngModel)]="task.description" (blur)="saveField('description', task.description)"></textarea>
+  </mat-form-field>
+
+  <div class="watch-row">
+    <button mat-stroked-button (click)="toggleWatch()">
+      <mat-icon>{{ isWatching ? 'visibility' : 'visibility_outlined' }}</mat-icon>
+      {{ isWatching ? 'Watching' : 'Watch' }}
+    </button>
+    <label class="attach-btn">
+      <mat-icon>attach_file</mat-icon> Attach file
+      <input type="file" hidden (change)="onFileSelected($event)" />
+    </label>
+  </div>
+  @if (task.attachments.length) {
+    <div class="attachments">
+      @for (a of task.attachments; track a.id) {
+        <span class="attachment-chip"><mat-icon inline>description</mat-icon> {{ a.original_name }}</span>
+      }
+    </div>
+  }
+
+  <h3>Comments</h3>
+  <div class="comments">
+    @for (c of task.comments; track c.id) {
+      <div class="comment">
+        <strong>{{ c.author.username }}</strong>
+        <span class="comment-time">{{ c.created_at | date: 'short' }}</span>
+        <p>{{ c.body }}</p>
+      </div>
+    }
+  </div>
+  <div class="comment-form">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Add a comment</mat-label>
+      <textarea matInput rows="2" [(ngModel)]="newComment"></textarea>
+    </mat-form-field>
+    <button mat-flat-button color="primary" (click)="postComment()" [disabled]="!newComment.trim()">Post</button>
+  </div>
+
+  @if (task.logs.length) {
+    <h3>Activity</h3>
+    <div class="logs">
+      @for (l of task.logs; track l.id) {
+        <div class="log-entry">
+          <span>{{ l.actor?.username || 'System' }} — {{ l.action }}</span>
+          <span class="log-time">{{ l.created_at | date: 'short' }}</span>
+        </div>
+      }
+    </div>
+  }
+</mat-dialog-content>
+<mat-dialog-actions class="dialog-actions">
+  <button mat-button color="warn" (click)="deleteTask()">Delete task</button>
+  <button mat-button mat-dialog-close>Close</button>
+</mat-dialog-actions>
